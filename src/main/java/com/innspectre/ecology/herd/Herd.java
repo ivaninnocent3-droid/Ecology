@@ -43,7 +43,7 @@ public final class Herd {
     // Runtime only (not saved).
     private Vec3 centre;
     private double radius;
-    private long centreUpdatedAt = Long.MIN_VALUE;
+    private long centreUpdatedAt;
 
     Herd(UUID id, EntityType<?> species, Collection<UUID> members) {
         this.id = id;
@@ -89,7 +89,9 @@ public final class Herd {
     }
 
     public boolean centreIsStale(long gameTime, long maxAgeTicks) {
-        return gameTime - centreUpdatedAt >= maxAgeTicks;
+        // No centre yet counts as stale. (Don't start centreUpdatedAt at Long.MIN_VALUE:
+        // subtracting it overflows and the centre would never be calculated.)
+        return centre == null || gameTime - centreUpdatedAt >= maxAgeTicks;
     }
 
     // ---- package-private: only HerdRegistry / HerdManager change these ----

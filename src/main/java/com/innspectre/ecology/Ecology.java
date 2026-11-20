@@ -7,10 +7,11 @@ import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.innspectre.ecology.command.HerdCommand;
 import com.innspectre.ecology.command.NeedCommand;
 import com.innspectre.ecology.command.RecognitionCommand;
 import com.innspectre.ecology.need.*;
-import com.innspectre.ecology.herd.HerdTicker;
+import com.innspectre.ecology.herd.*;
 
 public class Ecology implements ModInitializer {
 	public static final String MOD_ID = "ecology";
@@ -30,7 +31,8 @@ public class Ecology implements ModInitializer {
 		NeedEvents.register();
 		NeedCommand.register();
 		RecognitionCommand.register();
-		HerdTicker.register();
+		HerdCommand.register();
+		HerdEvents.register();
 		LOGGER.info("Hello Fabric world!");
 	}
 
