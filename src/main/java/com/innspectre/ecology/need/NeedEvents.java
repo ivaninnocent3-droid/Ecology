@@ -11,7 +11,8 @@ public class NeedEvents {
             // Still sheep-only for now; widen this once the diet system is in.
             if (entity instanceof Sheep) {
                 NeedManager.ensureStarted(entity, NeedType.HUNGER);
-            }
+                NeedManager.ensureStarted(entity, NeedType.THIRST);
+            }       
         });
     }
 }

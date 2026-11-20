@@ -7,7 +7,8 @@ package com.innspectre.ecology.need;
 public enum NeedType {
 
     // 1 point every 1,200 ticks (60 seconds). Lower this (e.g. 20L) while testing.
-    HUNGER("hunger", 100, 1200L);
+    HUNGER("hunger", 100, 1200L),
+    THIRST("thirst", 100, 1200L);
 
     private final String id;
     private final int max;

@@ -10,18 +10,26 @@ public class TemperamentGoals {
 
     public static void addRunningAvoidanceGoal(PathfinderMob animal, GoalSelector goalSelector) {
 
-        if (!AnimalTemperament.forEntity(animal).fleesFromRunningPlayer()) {
+        if (!AnimalTemperament.supports(animal)) {
             return;
         }
+
+        AnimalTemperament temperament = AnimalTemperament.forEntity(animal);
 
         goalSelector.addGoal(1,
                 new AvoidEntityGoal<Player>(
                         animal,
                         Player.class,
-                        AnimalTemperament.forEntity(animal).avoidanceDistance(),
+                        temperament.avoidanceDistance(),
                         1.0,
                         1.4,
-                        player -> player.isSprinting()
+                        player -> player instanceof Player target
+                                && (
+                                    (target.isSprinting()
+                                            && temperament.effectiveFearfulness(animal, target) >= 3)
+                                    ||
+                                    temperament.fleesFromApproachingPlayer(animal, target)
+                                )
                 )
         );
     }

@@ -14,6 +14,10 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+
 public class RecognitionCommand {
 
     public static void register() {
@@ -185,11 +189,25 @@ public class RecognitionCommand {
         );
     }
     private static LivingEntity getTargetAnimal(Player player) {
-        var hit = player.pick(10, 0, false);
 
-        if (hit instanceof EntityHitResult entityHit
-                && entityHit.getEntity() instanceof LivingEntity livingEntity
-                && livingEntity != player) {
+        Vec3 start = player.getEyePosition();
+        Vec3 direction = player.getViewVector(1.0F);
+        Vec3 end = start.add(direction.scale(10));
+
+        AABB searchBox = player.getBoundingBox()
+                .expandTowards(direction.scale(10))
+                .inflate(1.0);
+
+        var hit = ProjectileUtil.getEntityHitResult(
+                player,
+                start,
+                end,
+                searchBox,
+                entity -> entity instanceof LivingEntity && entity != player,
+                100.0
+        );
+
+        if (hit != null && hit.getEntity() instanceof LivingEntity livingEntity) {
             return livingEntity;
         }
 
