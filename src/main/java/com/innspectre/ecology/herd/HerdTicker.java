@@ -8,6 +8,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
+import com.innspectre.ecology.need.NeedManager;
+import com.innspectre.ecology.need.NeedType;
+
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.level.ServerLevel;
@@ -89,29 +92,74 @@ public final class HerdTicker {
 
     // ---- leaving ----
 
-    private static void maybeLeave(ServerLevel level, Mob mob, Herd herd, HerdProfile profile, long tick) {
+        
+    private static final int WATER_EXPLORATION_THRESHOLD = 50;
+
+    /**
+     * Maximum chance of leaving per check while behaving normally.
+     */
+    private static final double EXPLORING_LEAVE_CHANCE = 0.002;
+
+    private static void maybeLeave(
+            ServerLevel level,
+            Mob mob,
+            Herd herd,
+            HerdProfile profile,
+            long tick
+    ) {
         Optional<Vec3> centre = HerdManager.centre(level, herd);
+
         if (centre.isEmpty()) {
             return;
         }
 
         double distance = distanceToHerd(mob, centre.get());
         double comfort = profile.comfortFor(herd.size());
+
         if (distance <= comfort) {
-            return; // close enough to never leave
+            return;
         }
 
-        // 0 at the edge of the comfort radius, 1 at leaveRange; squared so it ramps up gently.
+        // A sheep exploring for water should normally retain herd membership,
+        // even when it travels well beyond the usual comfort distance.
+        boolean exploringForWater =
+                NeedManager.get(mob, NeedType.THIRST)
+                        < WATER_EXPLORATION_THRESHOLD;
+
+        if (exploringForWater) {
+            if (mob.getRandom().nextDouble() < EXPLORING_LEAVE_CHANCE) {
+                leaveHerd(mob, herd, profile, tick);
+            }
+
+            return;
+        }
+
+        // Normal distance-based leaving behaviour.
         double span = Math.max(1.0, profile.leaveRange() - comfort);
         double t = Math.min(1.0, (distance - comfort) / span);
         double chance = profile.maxLeaveChance() * t * t;
 
         if (mob.getRandom().nextDouble() < chance) {
-            UUID herdId = herd.id();
-            HerdManager.leave(mob);
-            COOLDOWNS.put(mob.getUUID(), new Cooldown(herdId, tick + profile.rejoinCooldownTicks()));
+            leaveHerd(mob, herd, profile, tick);
         }
     }
+
+    private static void leaveHerd(
+            Mob mob,
+            Herd herd,
+            HerdProfile profile,
+            long tick
+    ) {
+        UUID herdId = herd.id();
+
+        HerdManager.leave(mob);
+
+        COOLDOWNS.put(
+                mob.getUUID(),
+                new Cooldown(herdId, tick + profile.rejoinCooldownTicks())
+        );
+    }
+
 
     // ---- joining and forming ----
 

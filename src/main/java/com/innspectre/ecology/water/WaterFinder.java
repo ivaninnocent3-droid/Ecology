@@ -345,6 +345,57 @@ public class WaterFinder {
 
 
 
+
+    /**
+     * Finds safe, reachable drinking positions around a particular known
+     * water source.
+     *
+     * Unlike the general search, this does not search for other water bodies.
+     */
+    public static List<DrinkingPosition> findAvailableDrinkingPositionsAtSource(
+            PathfinderMob animal,
+            BlockPos waterPos
+    ) {
+        List<DrinkingPosition> positions = new ArrayList<>();
+
+        // The source may have changed since the herd learned about it.
+        if (!animal.level().getBlockState(waterPos).is(Blocks.WATER)
+                || animal.level().getFluidState(waterPos).getAmount() != 8) {
+            return positions;
+        }
+
+        // Check reachable positions on the bank.
+        for (BlockPos bankPos : findBankDrinkingPositions(animal, waterPos)) {
+            positions.add(new DrinkingPosition(
+                    bankPos,
+                    waterPos,
+                    DrinkingPosition.Type.BANK
+            ));
+        }
+
+        // Also allow shallow-water drinking where it is safe.
+        if (isTallEnoughForShallowWater(animal)) {
+            ShallowWaterCheck result = hasSafeShallowWaterPosition(
+                    animal,
+                    waterPos,
+                    MAX_PATHFINDING_ATTEMPTS
+            );
+
+            if (result.safe()) {
+                positions.add(new DrinkingPosition(
+                        waterPos,
+                        waterPos,
+                        DrinkingPosition.Type.SHALLOW_WATER
+                ));
+            }
+        }
+
+        return positions;
+    }
+
+
+
+
     public static DrinkingPosition chooseDrinkingPosition(
         List<DrinkingPosition> positions,
         BlockPos animalPos,

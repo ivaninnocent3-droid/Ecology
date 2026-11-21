@@ -17,7 +17,7 @@ public final class HerdProfiles {
                     24.0, 0.50,   // join range, max join chance
                     12.0, 0.50,   // form range, form chance
                     8.0, 0.25,    // comfort radius, extra comfort per member
-                    40.0, 0.30,   // leave range, max leave chance
+                    40.0, 0.01,   // leave range, max leave chance
                     600           // rejoin cooldown (ticks)
             )
     );
