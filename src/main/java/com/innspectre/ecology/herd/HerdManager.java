@@ -5,6 +5,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Collection;
+
+import net.minecraft.world.entity.player.Player;
+
+import com.innspectre.ecology.recognition.RecognitionManager;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -134,5 +139,49 @@ public final class HerdManager {
             }
         }
         return loaded;
+    }
+
+    /**
+     * Records a player's attack on an animal for the rest of its herd.
+     * Loaded members react immediately; unloaded members retain a pending reaction.
+     */
+    public static void recordHerdIncident(Entity victim, Player player) {
+        if (!(victim.level() instanceof ServerLevel level)) {
+            return;
+        }
+
+        HerdRegistry registry = HerdRegistry.get(level);
+        Optional<Herd> optionalHerd = registry.getHerdOf(victim.getUUID());
+
+        if (optionalHerd.isEmpty()) {
+            return;
+        }
+
+        Herd herd = optionalHerd.get();
+        UUID playerId = player.getUUID();
+
+        // Exclude the animal that was killed.
+        List<UUID> recipients = herd.members().stream()
+                .filter(memberId -> !memberId.equals(victim.getUUID()))
+                .toList();
+
+        // Queue everyone first, including unloaded members.
+        registry.addPendingReaction(herd.id(), playerId, recipients);
+
+        // Apply immediately to members that are currently loaded.
+        for (UUID memberId : recipients) {
+            Entity member = level.getEntity(memberId);
+
+            if (member != null && member.isAlive()) {
+                applyHerdIncident(member, playerId);
+                registry.removePendingReaction(herd.id(), playerId, memberId);
+            }
+        }
+    }
+
+    /** Applies the actual recognition and relationship changes. */
+    public static void applyHerdIncident(Entity animal, UUID playerId) {
+        RecognitionManager.changeRelationship(animal, playerId, -80);
+        RecognitionManager.changeRecognition(animal, playerId, 30);
     }
 }

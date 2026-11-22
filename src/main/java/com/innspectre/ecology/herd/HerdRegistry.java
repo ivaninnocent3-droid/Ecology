@@ -73,6 +73,43 @@ public class HerdRegistry extends SavedData {
     // ---- changes ----
 
     /**
+     * Records a player-caused incident for herd members that still need to receive it.
+     */
+    public void addPendingReaction(UUID herdId, UUID playerId, Collection<UUID> recipients) {
+        Herd herd = herds.get(herdId);
+        if (herd == null || recipients.isEmpty()) {
+            return;
+        }
+
+        herd.addPendingReaction(playerId, recipients);
+        setDirty();
+    }
+
+    /** Gets the members still waiting to receive this player's incident. */
+    public List<UUID> getPendingReactions(UUID herdId, UUID playerId) {
+        Herd herd = herds.get(herdId);
+        return herd == null ? List.of() : herd.getPendingReactions(playerId);
+    }
+
+    /** Marks one member as having received the incident. */
+    public void removePendingReaction(UUID herdId, UUID playerId, UUID recipient) {
+        Herd herd = herds.get(herdId);
+        if (herd == null) {
+            return;
+        }
+
+        herd.removePendingReaction(playerId, recipient);
+
+        // Once all pending reactions are processed, dissolve undersized herds.
+        if (herd.size() < Herd.MIN_VIABLE_SIZE
+                && !herd.hasPendingReactions()) {
+            dissolve(herd);
+        }
+
+        setDirty();
+    }
+
+    /**
      * Creates a herd from animals that aren't in one yet. Returns empty if fewer than
      * Herd.MIN_VIABLE_SIZE are free. The caller checks that they are all the given species.
      */
@@ -117,13 +154,17 @@ public class HerdRegistry extends SavedData {
         if (herdId == null) {
             return;
         }
+
         Herd herd = herds.get(herdId);
         if (herd != null) {
             herd.removeMember(animal);
-            if (herd.size() < Herd.MIN_VIABLE_SIZE) {
+
+            if (herd.size() < Herd.MIN_VIABLE_SIZE
+                    && !herd.hasPendingReactions()) {
                 dissolve(herd);
             }
         }
+
         setDirty();
     }
 
@@ -154,7 +195,7 @@ public class HerdRegistry extends SavedData {
                     herd.removeMember(animal);
                 }
             }
-            if (herd.size() < Herd.MIN_VIABLE_SIZE) {
+            if (herd.size() < Herd.MIN_VIABLE_SIZE && !herd.hasPendingReactions()) {
                 continue;
             }
             registry.herds.put(herd.id(), herd);
@@ -163,5 +204,10 @@ public class HerdRegistry extends SavedData {
             }
         }
         return registry;
+    }
+
+    public List<UUID> getPendingReactionPlayerIds(UUID herdId) {
+        Herd herd = herds.get(herdId);
+        return herd == null ? List.of() : herd.getPendingReactionPlayerIds();
     }
 }

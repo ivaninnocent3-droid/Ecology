@@ -3,11 +3,16 @@
 	"package": "com.innspectre.ecology.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
-    	"ExampleMixin",
-    	"SheepMixin",
+		"ExampleMixin",
+		"SheepMixin",
 		"ChickenMixin",
 		"TemptGoalMixin",
-		"MobAccessor"
+		"MobAccessor",
+		"AnimalMixin",
+		"LivingEntityMixin",
+		"AnimalBreedingMixin",
+		"TamableAnimalMixin",
+		"AbstractHorseMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

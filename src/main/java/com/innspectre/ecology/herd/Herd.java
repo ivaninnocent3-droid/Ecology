@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -33,22 +36,33 @@ public final class Herd {
     public static final Codec<Herd> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             UUIDUtil.CODEC.fieldOf("id").forGetter(Herd::id),
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("species").forGetter(Herd::species),
-            UUIDUtil.CODEC.listOf().fieldOf("members").forGetter(herd -> List.copyOf(herd.members))
+            UUIDUtil.CODEC.listOf().fieldOf("members").forGetter(herd -> List.copyOf(herd.members)),Codec.unboundedMap(Codec.STRING, UUIDUtil.CODEC.listOf()).fieldOf("pending_reactions").orElse(Map.of()).forGetter(herd -> herd.pendingReactions)
     ).apply(instance, Herd::new));
 
     private final UUID id;
     private final EntityType<?> species;
     private final Set<UUID> members = new LinkedHashSet<>();
+    // Player UUID -> herd members that still need to receive this player's incident.
+    private final Map<String, List<UUID>> pendingReactions = new HashMap<>();
 
     // Runtime only (not saved).
     private Vec3 centre;
     private double radius;
     private long centreUpdatedAt;
 
-    Herd(UUID id, EntityType<?> species, Collection<UUID> members) {
+    Herd(
+        UUID id,
+        EntityType<?> species,
+        Collection<UUID> members,
+        Map<String, List<UUID>> pendingReactions
+    ) {
         this.id = id;
         this.species = species;
         this.members.addAll(members);
+        this.pendingReactions.putAll(pendingReactions);
+    }
+    Herd(UUID id, EntityType<?> species, Collection<UUID> members) {
+    this(id, species, members, Map.of());
     }
 
     public UUID id() {
@@ -108,5 +122,50 @@ public final class Herd {
         this.centre = centre;
         this.radius = radius;
         this.centreUpdatedAt = gameTime;
+    }
+
+    void addPendingReaction(UUID playerId, Collection<UUID> recipients) {
+        List<UUID> pending = pendingReactions.computeIfAbsent(
+                playerId.toString(),
+                key -> new ArrayList<>()
+        );
+
+        for (UUID recipient : recipients) {
+            if (!pending.contains(recipient)) {
+                pending.add(recipient);
+            }
+        }
+    }
+
+    List<UUID> getPendingReactions(UUID playerId) {
+        return List.copyOf(
+                pendingReactions.getOrDefault(playerId.toString(), List.of())
+        );
+    }
+
+    void removePendingReaction(UUID playerId, UUID recipient) {
+        String key = playerId.toString();
+        List<UUID> recipients = pendingReactions.get(key);
+
+        if (recipients == null) {
+            return;
+        }
+
+        recipients.remove(recipient);
+
+        if (recipients.isEmpty()) {
+            pendingReactions.remove(key);
+        }
+    }
+
+    boolean hasPendingReactions() {
+        return pendingReactions.values().stream()
+                .anyMatch(recipients -> !recipients.isEmpty());
+    }
+
+    List<UUID> getPendingReactionPlayerIds() {
+        return pendingReactions.keySet().stream()
+                .map(UUID::fromString)
+                .toList();
     }
 }

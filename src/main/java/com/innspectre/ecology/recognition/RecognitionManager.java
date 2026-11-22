@@ -8,9 +8,11 @@ import com.mojang.serialization.Codec;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 
 import com.innspectre.ecology.Ecology;
+import com.innspectre.ecology.herd.HerdManager;
 import com.innspectre.ecology.intelligence.AnimalIntelligence;
 
 public class RecognitionManager {
@@ -89,7 +91,7 @@ public class RecognitionManager {
         Entity entity,
         UUID playerId,
         RecognitionInteraction interaction
-    ) {
+        ) {
         RecognitionState state = get(entity, playerId);
 
         int learningRate = AnimalIntelligence.forEntity(entity).learningRate();
@@ -113,6 +115,43 @@ public class RecognitionManager {
                 entity.level().getGameTime(),
                 newRelationship
         ));
+
+        // The rest of the herd learns a weaker version of the interaction.
+        HerdManager.getHerd(entity).ifPresent(herd -> {
+                if (!(entity.level() instanceof ServerLevel level)) {
+                return;
+                }
+
+                for (UUID memberId : herd.members()) {
+                if (memberId.equals(entity.getUUID())) {
+                        continue;
+                }
+
+                Entity member = level.getEntity(memberId);
+
+                // Only loaded, living members can learn about the interaction.
+                if (member == null || !member.isAlive()) {
+                        continue;
+                }
+
+                int memberLearningRate =
+                        AnimalIntelligence.forEntity(member).learningRate();
+
+                int sharedRecognitionGain =
+                        Math.max(1, recognitionGain / 2) * memberLearningRate;
+
+                int sharedRelationshipChange =
+                        interaction.relationshipChange() / 2;
+
+                RecognitionState memberState = get(member, playerId);
+
+                set(member, playerId, new RecognitionState(
+                        memberState.value() + sharedRecognitionGain,
+                        level.getGameTime(),
+                        memberState.relationship() + sharedRelationshipChange
+                ));
+                }
+        });
     }
 
         /**
