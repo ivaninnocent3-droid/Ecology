@@ -33,6 +33,7 @@ public class Ecology implements ModInitializer {
 		HerdDebugCommand.register();
 		HerdEvents.register();
 		HerdTicker.register();
+		HerdAlarmTicker.register();
 		LOGGER.info("Hello Fabric world!");
 	}
 
