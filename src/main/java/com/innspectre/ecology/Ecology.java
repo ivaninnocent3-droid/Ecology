@@ -27,6 +27,7 @@ public class Ecology implements ModInitializer {
 
 		NeedManager.initialize();
 		NeedEvents.register();
+		SurvivalEvents.register();
 		NeedCommand.register();
 		RecognitionCommand.register();
 		HerdCommand.register();

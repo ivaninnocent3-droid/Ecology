@@ -36,7 +36,16 @@ public final class ThreatManager {
             PathfinderMob animal,
             Threat threat
     ) {
+        threaten(animal, threat, THREAT_MEMORY_TICKS);
+    }
+
+    public static void threaten(
+            PathfinderMob animal,
+            Threat threat,
+            long memoryTicks
+    ) {
         long now = animal.level().getGameTime();
+        long expiryTime = now + Math.max(1L, memoryTicks);
 
         ThreatMemory existing = THREATS.get(animal.getUUID());
 
@@ -47,7 +56,7 @@ public final class ThreatManager {
                     animal.getUUID(),
                     new ThreatMemory(
                             threat,
-                            now + THREAT_MEMORY_TICKS
+                            expiryTime
                     )
             );
 
@@ -59,11 +68,10 @@ public final class ThreatManager {
                 animal.getUUID(),
                 new ThreatMemory(
                         existing.threat(),
-                        now + THREAT_MEMORY_TICKS
+                        expiryTime
                 )
         );
     }
-
     public static Threat get(PathfinderMob animal) {
         ThreatMemory memory = THREATS.get(animal.getUUID());
 

@@ -2,8 +2,10 @@
 package com.innspectre.ecology.mixin;
 
 import com.innspectre.ecology.temperament.TemperamentGoals;
+import com.innspectre.ecology.AnimalEcologyGoals;
 import com.innspectre.ecology.mixin.MobAccessor;
 
+import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.animal.chicken.Chicken;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,10 +19,9 @@ public abstract class ChickenMixin {
     @Inject(method = "registerGoals", at = @At("TAIL"))
     private void ecology$addRunningAvoidanceGoal(CallbackInfo ci) {
         Chicken chicken = (Chicken) (Object) this;
+        GoalSelector goals = ((MobAccessor) chicken).ecology$getGoalSelector();
 
-        TemperamentGoals.addRunningAvoidanceGoal(
-                chicken,
-                ((MobAccessor) chicken).ecology$getGoalSelector()
-        );
+        TemperamentGoals.addRunningAvoidanceGoal(chicken, goals);
+        AnimalEcologyGoals.addSharedGoals(chicken, goals);
     }
 }

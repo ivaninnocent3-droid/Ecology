@@ -1,5 +1,6 @@
 package com.innspectre.ecology.mixin;
 
+import com.innspectre.ecology.AnimalEcologyGoals;
 import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.temperament.TemperamentGoals;
 import com.innspectre.ecology.water.*;
@@ -21,8 +22,7 @@ public abstract class SheepMixin {
         GoalSelector goals = ((MobAccessor) sheep).ecology$getGoalSelector();
 
         TemperamentGoals.addRunningAvoidanceGoal(sheep, goals);
-        goals.addGoal(2, new SeekWaterGoal(sheep));
-        goals.addGoal(3, new WaterExplorationGoal(sheep, 1.0));
+        AnimalEcologyGoals.addSharedGoals(sheep, goals);
         goals.addGoal(5, new HerdCohesionGoal(sheep, 1.0));
     }
 }

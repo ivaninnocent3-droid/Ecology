@@ -40,6 +40,7 @@ public final class HerdAlarmTicker {
     private static final double ALARM_SPREAD_RADIUS = 8.0;
     private static final long ALARM_DURATION = 35L;
     private static final int INITIAL_RESPONDER_COUNT = 3;
+    private static final long HERD_THREAT_MEMORY_TICKS = 30L;
 
     private static final Map<ServerLevel, Map<UUID, Alarm>> ACTIVE_ALARMS =
             new WeakHashMap<>();
@@ -101,18 +102,18 @@ public final class HerdAlarmTicker {
                 return true;
             }
 
-            // Keep the alarm alive while its source remains threatening.
-            refreshAlarm(level, herd, alarm, now);
+        // Only refresh and propagate while the player is actively approaching.
+        boolean activelyThreatened = refreshAlarm(level, herd, alarm, now);
 
-            if (now >= alarm.expiresAt) {
-                expiredAlarms.add(entry.getKey());
-                return true;
-            }
+        if (now >= alarm.expiresAt) {
+            expiredAlarms.add(entry.getKey());
+            return true;
+        }
 
-            if (now >= alarm.nextPropagationTick) {
-                propagate(level, herd, alarm, now);
-                alarm.nextPropagationTick = now + PROPAGATION_INTERVAL;
-            }
+        if (activelyThreatened && now >= alarm.nextPropagationTick) {
+            propagate(level, herd, alarm, now);
+            alarm.nextPropagationTick = now + PROPAGATION_INTERVAL;
+        }
 
             return false;
         });
@@ -135,7 +136,7 @@ public final class HerdAlarmTicker {
         }
     }
 
-    private static void refreshAlarm(
+    private static boolean refreshAlarm(
         ServerLevel level,
         Herd herd,
         Alarm alarm,
@@ -147,13 +148,13 @@ public final class HerdAlarmTicker {
                 || player.level() != level
                 || player.isSpectator()
                 || player.isCreative()) {
-            return;
+            return false;
         }
 
         var centreOptional = HerdManager.centre(level, herd);
 
         if (centreOptional.isEmpty()) {
-            return;
+            return false;
         }
 
         Vec3 centre = centreOptional.get();
@@ -164,7 +165,7 @@ public final class HerdAlarmTicker {
         double dz = player.getZ() - centre.z;
 
         if (dx * dx + dz * dz > detectionRadius * detectionRadius) {
-            return;
+            return false;
         }
 
         // Work out whether the player is actually moving towards the herd.
@@ -177,11 +178,13 @@ public final class HerdAlarmTicker {
 
         // Don't refresh the alarm if the player has stopped or is moving away.
         if (approachSpeed <= 0.01) {
-            return;
+            return false;
         }
 
         alarm.threatPosition = player.position();
         alarm.expiresAt = now + ALARM_DURATION;
+
+        return true;
     }
 
     private static void detectPlayer(
@@ -237,7 +240,8 @@ public final class HerdAlarmTicker {
             for (PathfinderMob animal : firstResponders) {
                 ThreatManager.threaten(
                         animal,
-                        new Threat(player.getUUID(), threatPosition, 1.0)
+                        new Threat(player.getUUID(), threatPosition, 1.0),
+                        HERD_THREAT_MEMORY_TICKS
                 );
             }
 
@@ -348,7 +352,8 @@ public final class HerdAlarmTicker {
                                 alarm.sourceId,
                                 alarm.threatPosition,
                                 1.0
-                        )
+                        ),
+                        HERD_THREAT_MEMORY_TICKS
                 );
             }
         }
@@ -403,7 +408,8 @@ public final class HerdAlarmTicker {
                             alarm.sourceId,
                             alarm.threatPosition,
                             1.0
-                    )
+                    ),
+                    HERD_THREAT_MEMORY_TICKS
             );
         }
     }
