@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class PatchedGrassBlock extends Block {
 
     // Chance of recovery whenever this block receives a random tick.
-    private static final int RECOVERY_CHANCE = 8;
+    private static final int RECOVERY_CHANCE = 48;
 
     public PatchedGrassBlock(Properties properties) {
         super(properties);

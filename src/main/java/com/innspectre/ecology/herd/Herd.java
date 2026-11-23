@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.innspectre.ecology.shelter.ShelterTarget;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.UUIDUtil;
@@ -30,8 +31,8 @@ import net.minecraft.world.phys.Vec3;
 public final class Herd {
 
     /** Placeholder values - tune later. */
-    public static final int MAX_SIZE = 24;
     public static final int MIN_VIABLE_SIZE = 2;
+    
 
     public static final Codec<Herd> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             UUIDUtil.CODEC.fieldOf("id").forGetter(Herd::id),
@@ -44,6 +45,13 @@ public final class Herd {
     private final Set<UUID> members = new LinkedHashSet<>();
     // Player UUID -> herd members that still need to receive this player's incident.
     private final Map<String, List<UUID>> pendingReactions = new HashMap<>();
+        // Runtime only: the shared shelter selected for this herd.
+    private ShelterTarget shelterTarget;
+
+    // Runtime only: prevents repeated expensive searches when no shelter is found.
+    private long nextShelterSearchTick;
+    // Runtime only: when this herd began searching for shelter.
+    private long shelterSearchStartedAt = -1L;
 
     // Runtime only (not saved).
     private Vec3 centre;
@@ -86,7 +94,9 @@ public final class Herd {
     }
 
     public boolean isFull() {
-        return members.size() >= MAX_SIZE;
+        return members.size() >= HerdProfiles.get(species)
+                .map(HerdProfile::maxSize)
+                .orElse(0);
     }
 
     /** The cached centre of the loaded members, if it has been calculated. */
@@ -167,5 +177,42 @@ public final class Herd {
         return pendingReactions.keySet().stream()
                 .map(UUID::fromString)
                 .toList();
+    }
+
+    public Optional<ShelterTarget> shelterTarget() {
+        return Optional.ofNullable(shelterTarget);
+    }
+
+    public void setShelterTarget(ShelterTarget shelterTarget) {
+        this.shelterTarget = shelterTarget;
+    }
+
+    public long nextShelterSearchTick() {
+        return nextShelterSearchTick;
+    }
+
+    public void setNextShelterSearchTick(long tick) {
+        this.nextShelterSearchTick = tick;
+    }
+
+    public boolean isShelterActive() {
+        return shelterSearchStartedAt >= 0L;
+    }
+
+    public long shelterSearchStartedAt() {
+        return shelterSearchStartedAt;
+    }
+
+    public void startShelterSearch(long gameTime) {
+        if (shelterSearchStartedAt < 0L) {
+            shelterSearchStartedAt = gameTime;
+            nextShelterSearchTick = gameTime;
+        }
+    }
+
+    public void resetShelterState() {
+        shelterTarget = null;
+        shelterSearchStartedAt = -1L;
+        nextShelterSearchTick = 0L;
     }
 }

@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SpreadingSnowyBlock.class)
 public abstract class SpreadingSnowyBlockMixin {
 
+    private static final int SPREAD_CHANCE = 16;
+
     @Inject(
             method = "randomTick",
             at = @At("HEAD"),
@@ -43,6 +45,11 @@ public abstract class SpreadingSnowyBlockMixin {
                     3
             );
 
+            ci.cancel();
+            return;
+        }
+
+        if (random.nextInt(SPREAD_CHANCE) != 0) {
             ci.cancel();
             return;
         }

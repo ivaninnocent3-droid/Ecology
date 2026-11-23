@@ -114,10 +114,17 @@ public class HerdRegistry extends SavedData {
      * Herd.MIN_VIABLE_SIZE are free. The caller checks that they are all the given species.
      */
     public Optional<Herd> createHerd(EntityType<?> species, Collection<UUID> founders) {
+        int maxSize = HerdProfiles.get(species)
+                .map(HerdProfile::maxSize)
+                .orElse(0);
+
+        if (maxSize < Herd.MIN_VIABLE_SIZE) {
+            return Optional.empty();
+        }
         List<UUID> free = founders.stream()
                 .distinct()
                 .filter(animal -> !herdByAnimal.containsKey(animal))
-                .limit(Herd.MAX_SIZE)
+                .limit(maxSize)
                 .toList();
 
         if (free.size() < Herd.MIN_VIABLE_SIZE) {

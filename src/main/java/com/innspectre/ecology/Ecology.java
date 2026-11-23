@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import com.innspectre.ecology.block.ModBlocks;
 import com.innspectre.ecology.command.*;
 import com.innspectre.ecology.need.*;
+import com.innspectre.ecology.shelter.ShelterManager;
+import com.innspectre.ecology.spawn.AnimalSpawning;
 import com.innspectre.ecology.herd.*;
 
 import com.innspectre.ecology.temperament.IndividualThreatTicker;
@@ -29,6 +31,7 @@ public class Ecology implements ModInitializer {
 		// Proceed with mild caution.
 
 		NeedManager.initialize();
+		ModBlocks.initialize();
 		NeedEvents.register();
 		SurvivalEvents.register();
 		NeedCommand.register();
@@ -38,8 +41,9 @@ public class Ecology implements ModInitializer {
 		HerdEvents.register();
 		HerdTicker.register();
 		HerdAlarmTicker.register();
+		ShelterManager.register();
 		IndividualThreatTicker.register();
-		ModBlocks.initialize();
+		AnimalSpawning.register();
 		LOGGER.info("Hello Fabric world!");
 	}
 

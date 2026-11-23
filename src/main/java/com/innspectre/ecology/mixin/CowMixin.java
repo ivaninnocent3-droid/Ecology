@@ -8,6 +8,7 @@ import net.minecraft.world.entity.animal.cow.AbstractCow;
 import com.innspectre.ecology.food.FoodSourceType;
 import com.innspectre.ecology.food.FoodProfiles;
 import com.innspectre.ecology.food.SeekFoodGoal;
+import com.innspectre.ecology.shelter.SeekShelterGoal;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,6 +24,7 @@ public abstract class CowMixin {
         GoalSelector goals = ((MobAccessor) cow).ecology$getGoalSelector();
 
         TemperamentGoals.addRunningAvoidanceGoal(cow, goals);
+        goals.addGoal(4, new SeekShelterGoal(cow, 1.0));
 
         // Add ecology-based grazing to animals whose diet includes vegetation.
         if (FoodProfiles.get(cow.getType())

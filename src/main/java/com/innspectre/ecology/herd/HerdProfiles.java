@@ -14,14 +14,46 @@ public final class HerdProfiles {
 
     private static final Map<EntityType<?>, HerdProfile> PROFILES = Map.of(
             EntityTypes.SHEEP, new HerdProfile(
-                    24.0, 0.50,   // join range, max join chance
-                    12.0, 0.50,   // form range, form chance
-                    8.0, 0.25,    // comfort radius, extra comfort per member
-                    40.0, 0.01,   // leave range, max leave chance
-                    600           // rejoin cooldown (ticks)
+                    50,             // max size
+                    24.0, 0.50,     // join range, max join chance
+                    12.0, 0.50,     // form range, form chance
+                    8.0, 0.25,      // comfort radius, extra comfort per member
+                    40.0, 0.01,     // leave range, max leave chance
+                    600             // rejoin cooldown
+            ),
+            EntityTypes.COW, new HerdProfile(
+                    50,
+                    24.0, 0.50,
+                    12.0, 0.50,
+                    8.0, 0.25,
+                    40.0, 0.01,
+                    600
+            ),
+            EntityTypes.PIG, new HerdProfile(
+                    20,
+                    24.0, 0.50,
+                    12.0, 0.50,
+                    8.0, 0.25,
+                    40.0, 0.01,
+                    600
+            ),
+            EntityTypes.CHICKEN, new HerdProfile(
+                    20,
+                    24.0, 0.50,
+                    12.0, 0.50,
+                    8.0, 0.25,
+                    40.0, 0.01,
+                    600
+            ),
+            EntityTypes.WOLF, new HerdProfile(
+                    12,
+                    24.0, 0.50,
+                    12.0, 0.50,
+                    8.0, 0.25,
+                    40.0, 0.01,
+                    600
             )
     );
-
     private HerdProfiles() {
     }
 

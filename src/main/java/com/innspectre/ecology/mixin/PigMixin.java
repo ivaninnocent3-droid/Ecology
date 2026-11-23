@@ -2,6 +2,7 @@ package com.innspectre.ecology.mixin;
 
 import com.innspectre.ecology.temperament.TemperamentGoals;
 import com.innspectre.ecology.food.SeekFoodGoal;
+import com.innspectre.ecology.shelter.SeekShelterGoal;
 
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.animal.pig.Pig;
@@ -20,6 +21,7 @@ public abstract class PigMixin {
         GoalSelector goals = ((MobAccessor) pig).ecology$getGoalSelector();
 
         TemperamentGoals.addRunningAvoidanceGoal(pig, goals);
+        goals.addGoal(4, new SeekShelterGoal(pig, 1.0));
 
         // Add ecology-based vegetation seeking.
         goals.addGoal(5, new SeekFoodGoal(

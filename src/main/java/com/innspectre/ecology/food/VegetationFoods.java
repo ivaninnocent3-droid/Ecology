@@ -4,12 +4,13 @@ package com.innspectre.ecology.food;
 import java.util.List;
 import java.util.Optional;
 
-import com.innspectre.ecology.block.ModBlocks;
+import com.innspectre.ecology.block.*;
 
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+
 
 public final class VegetationFoods {
 
@@ -21,11 +22,16 @@ public final class VegetationFoods {
         ),
         new VegetationFood(
             Blocks.TALL_GRASS,
-            new FoodNutrition(8),
+            new FoodNutrition(10),
             Blocks.SHORT_GRASS.defaultBlockState()
         ),
         new VegetationFood(
             Blocks.SHORT_GRASS,
+            new FoodNutrition(6),
+            Blocks.AIR.defaultBlockState()
+        ),
+        new VegetationFood(
+            Blocks.BUSH,
             new FoodNutrition(8),
             Blocks.AIR.defaultBlockState()
         )
@@ -70,7 +76,8 @@ public final class VegetationFoods {
             || block == Blocks.PODZOL
             || block == Blocks.MYCELIUM
             || block == Blocks.MOSS_BLOCK
-            || block == Blocks.MUD;
+            || block == Blocks.MUD
+            || block == ModBlocks.PATCHED_GRASS;
     }
 
     public static List<VegetationFood> getAll() {

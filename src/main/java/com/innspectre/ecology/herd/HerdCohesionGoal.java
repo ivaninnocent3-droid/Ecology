@@ -64,6 +64,9 @@ public class HerdCohesionGoal extends Goal {
         if (centre.isEmpty()) {
             return false;
         }
+        if (herd.get().isShelterActive()) {
+            return false;
+        }
 
         double dx = mob.getX() - centre.get().x;
         double dz = mob.getZ() - centre.get().z;
@@ -99,7 +102,9 @@ public class HerdCohesionGoal extends Goal {
         // Stop when the walk is finished, no path was found, or the animal left the herd.
         return pathFound
                 && !mob.getNavigation().isDone()
-                && HerdManager.getHerd(mob).isPresent();
+                && HerdManager.getHerd(mob)
+                        .filter(herd -> !herd.isShelterActive())
+                        .isPresent();
     }
 
     @Override

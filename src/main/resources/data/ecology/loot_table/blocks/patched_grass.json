@@ -5,8 +5,21 @@
       "rolls": 1,
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "ecology:patched_grass"
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "condition": "minecraft:tool/can_silk_touch",
+              "name": "ecology:patched_grass"
+            },
+            {
+              "type": "minecraft:item",
+              "condition": {
+                "type": "minecraft:survives_explosion"
+              },
+              "name": "minecraft:dirt"
+            }
+          ]
         }
       ]
     }

@@ -14,6 +14,7 @@ package com.innspectre.ecology.herd;
  * rejoinCooldownTicks            - how long an animal that left can't rejoin the same herd
  */
 public record HerdProfile(
+        int maxSize,
         double joinRange,
         double maxJoinChance,
         double formRange,
@@ -26,7 +27,10 @@ public record HerdProfile(
 ) {
 
     public HerdProfile {
-        // The leave range must sit beyond the comfort radius, or the leave formula breaks.
+        if (maxSize < 2) {
+            throw new IllegalArgumentException("maxSize must be at least 2");
+        }
+
         if (leaveRange <= comfortRadius) {
             throw new IllegalArgumentException("leaveRange must be greater than comfortRadius");
         }
