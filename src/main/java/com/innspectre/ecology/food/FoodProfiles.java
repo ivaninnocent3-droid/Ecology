@@ -1,3 +1,4 @@
+
 package com.innspectre.ecology.food;
 
 import java.util.Optional;
@@ -10,6 +11,9 @@ public final class FoodProfiles {
 
     private static final Map<EntityType<?>, FoodProfile> PROFILES = Map.of(
         EntityTypes.SHEEP, FoodProfile.sheep(),
+        EntityTypes.COW, FoodProfile.cow(),
+        EntityTypes.CHICKEN, FoodProfile.chicken(),
+        EntityTypes.PIG, FoodProfile.pig(),
         EntityTypes.WOLF, FoodProfile.wolf()
     );
 

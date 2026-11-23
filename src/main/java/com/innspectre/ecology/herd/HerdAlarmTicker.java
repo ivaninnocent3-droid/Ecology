@@ -14,6 +14,7 @@ import java.util.Optional;
 import com.innspectre.ecology.intelligence.AnimalIntelligence;
 import com.innspectre.ecology.temperament.AnimalResponse;
 import com.innspectre.ecology.temperament.AnimalTemperament;
+import com.innspectre.ecology.temperament.AnimalThreatRules;
 import com.innspectre.ecology.temperament.Threat;
 import com.innspectre.ecology.temperament.ThreatManager;
 
@@ -314,7 +315,7 @@ public final class HerdAlarmTicker {
             if (!(entity instanceof PathfinderMob animal)
                     || !animal.isAlive()
                     || !AnimalTemperament.supports(animal)
-                    || !shouldReact(animal, player)) {
+                    || !AnimalThreatRules.shouldReact(animal, player)) {
                 continue;
             }
 
@@ -382,7 +383,7 @@ public final class HerdAlarmTicker {
             }
 
             if (alarm.source.isAlive()
-                    && !shouldReact(animal, alarm.source)) {
+                    && !AnimalThreatRules.shouldReact(animal, alarm.source)) {
                 continue;
             }
 
@@ -427,29 +428,5 @@ public final class HerdAlarmTicker {
         }
 
         return false;
-    }
-
-    private static boolean shouldReact(
-            PathfinderMob animal,
-            Player player
-    ) {
-        AnimalTemperament temperament =
-                AnimalTemperament.forEntity(animal);
-
-        AnimalResponse response =
-                AnimalResponse.getResponse(animal, player);
-
-        return switch (response) {
-            case FLEE -> true;
-
-            case WARY ->
-                    !player.isCrouching()
-                    || animal.distanceToSqr(player) <= 9.0;
-
-            case COMFORTABLE ->
-                    (player.isSprinting()
-                            && temperament.effectiveFearfulness(animal, player) >= 3)
-                    || temperament.fleesFromApproachingPlayer(animal, player);
-        };
     }
 }

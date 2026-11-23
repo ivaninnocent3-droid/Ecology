@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "ecology:block/patched_grass"
+    }
+  }
+}

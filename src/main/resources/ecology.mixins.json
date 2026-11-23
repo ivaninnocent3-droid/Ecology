@@ -5,14 +5,22 @@
 	"mixins": [
 		"ExampleMixin",
 		"SheepMixin",
+		"SheepAccessor",
 		"ChickenMixin",
 		"TemptGoalMixin",
 		"MobAccessor",
 		"AnimalMixin",
 		"LivingEntityMixin",
+		"EntityMixin",
 		"AnimalBreedingMixin",
 		"TamableAnimalMixin",
-		"AbstractHorseMixin"
+		"AbstractHorseMixin",
+		"CowMixin",
+		"PigMixin",
+		"WolfMixin",
+		"NearestAttackableTargetGoalAccessor",
+		"SpreadingSnowyBlockMixin",
+		"AnimalActionEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

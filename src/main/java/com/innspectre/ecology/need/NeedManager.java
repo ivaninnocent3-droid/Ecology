@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 
 import com.innspectre.ecology.Ecology;
 import com.innspectre.ecology.need.*;
+import net.minecraft.world.entity.animal.wolf.Wolf;
 
 public class NeedManager {
 
@@ -31,18 +32,24 @@ public class NeedManager {
 
     /** Starts tracking a need at full value, if the entity isn't being tracked yet. */
     public static void ensureStarted(Entity entity, NeedType type) {
+        if (isExempt(entity)) {
+            return;
+        }
         AttachmentType<NeedState> attachment = ATTACHMENTS.get(type);
         if (!entity.hasAttached(attachment)) {
-            entity.setAttached(attachment, new NeedState(type.max(), now(entity), false));
+            entity.setAttached(attachment, new NeedState(type.initialValue(), now(entity), false));
         }
     }
 
     /** The current value, worked out from the saved value and the time that has passed. */
     public static int get(Entity entity, NeedType type) {
+        if (isExempt(entity)) {
+            return type.max();
+        }
         NeedState state = entity.getAttached(ATTACHMENTS.get(type));
 
         if (state == null) {
-            return type.max();
+            return type.initialValue();
         }
 
         if (state.paused()) {
@@ -53,11 +60,18 @@ public class NeedManager {
     }
 
     public static void set(Entity entity, NeedType type, int value) {
+        if (isExempt(entity)) {
+            return;
+        }
+
         int clamped = Math.clamp(value, 0, type.max());
         entity.setAttached(ATTACHMENTS.get(type), new NeedState(clamped, now(entity), false));
     }
 
     public static void pause(Entity entity, NeedType type) {
+        if (isExempt(entity)) {
+            return;
+        }
         int currentValue = get(entity, type);
 
         entity.setAttached(
@@ -67,7 +81,11 @@ public class NeedManager {
     }
 
     public static void resume(Entity entity, NeedType type) {
-    NeedState state = entity.getAttached(ATTACHMENTS.get(type));
+        if (isExempt(entity)) {
+            return;
+        }
+
+        NeedState state = entity.getAttached(ATTACHMENTS.get(type));
         if (state == null || !state.paused()) {
             return;
         }
@@ -98,5 +116,9 @@ public class NeedManager {
 
     private static long now(Entity entity) {
         return entity.level().getGameTime();
+    }
+
+    private static boolean isExempt(Entity entity) {
+        return entity instanceof Wolf wolf && wolf.isTame();
     }
 }

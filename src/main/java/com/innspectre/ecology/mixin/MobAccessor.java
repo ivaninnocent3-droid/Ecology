@@ -11,4 +11,7 @@ public interface MobAccessor {
 
     @Accessor("goalSelector")
     GoalSelector ecology$getGoalSelector();
+
+    @Accessor("targetSelector")
+    GoalSelector ecology$getTargetSelector();
 }

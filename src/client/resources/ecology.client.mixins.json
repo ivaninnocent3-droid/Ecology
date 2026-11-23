@@ -3,7 +3,10 @@
 	"package": "com.innspectre.ecology.client.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
-		"ExampleClientMixin"
+		"LivingEntityRenderStateMixin",
+		"LivingEntityRendererMixin",
+		"QuadrupedModelMixin",
+		"AdultChickenModelMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

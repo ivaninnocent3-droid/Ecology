@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 import com.innspectre.ecology.need.NeedManager;
 import com.innspectre.ecology.need.NeedType;
 import com.innspectre.ecology.herd.*;
+import com.innspectre.ecology.animation.AnimalActionManager;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -119,7 +120,7 @@ public class SeekWaterGoal extends Goal {
     @Override
     public void start() {
         seekingState.clearTarget();
-        seekingState.stopDrinking();
+        stopDrinking();
 
         nextSharedWaterCheckTime = 0;
 
@@ -134,7 +135,7 @@ public class SeekWaterGoal extends Goal {
     @Override
     public void stop() {
         seekingState.clearTarget();
-        seekingState.stopDrinking();
+        stopDrinking();
 
         animal.getNavigation().stop();
     }
@@ -236,7 +237,7 @@ public class SeekWaterGoal extends Goal {
             if (!animal.level().getBlockState(target.waterSource()).is(Blocks.WATER)
                     || animal.level().getFluidState(target.waterSource()).getAmount() != 8) {
 
-                seekingState.stopDrinking();
+                stopDrinking();
                 seekingState.clearTarget();
                 animal.getNavigation().stop();
 
@@ -269,6 +270,7 @@ public class SeekWaterGoal extends Goal {
                     );
 
                     seekingState.startDrinking(drinkAmount);
+                    AnimalActionManager.startDrinking(animal);
 
                     seekingState.setNextDrinkPointTime(
                             animal.level().getGameTime()
@@ -290,7 +292,7 @@ public class SeekWaterGoal extends Goal {
                     );
 
                     if (seekingState.getRemainingDrinkAmount() <= 0) {
-                        seekingState.stopDrinking();
+                        stopDrinking();
 
                         seekingState.setNextDrinkDecisionTime(
                                 currentTime + 200L
@@ -310,6 +312,13 @@ public class SeekWaterGoal extends Goal {
                     target.position().getZ() + 0.5,
                     1.0
             );
+        }
+    }
+
+    private void stopDrinking() {
+        if (seekingState.isDrinking()) {
+            AnimalActionManager.stopDrinking(animal);
+            stopDrinking();
         }
     }
 }

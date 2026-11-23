@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.entity.animal.wolf.Wolf;
 
 public class NeedCommand {
 
@@ -26,19 +27,21 @@ public class NeedCommand {
                         .executes(context -> {
                             var player = context.getSource().getPlayerOrException();
 
-                            var sheep = player.level().getEntitiesOfClass(
-                                Sheep.class,
+                            var wolves = player.level().getEntitiesOfClass(
+                                Wolf.class,
                                 player.getBoundingBox().inflate(10)
                             );
 
-                            if (sheep.isEmpty()) {
+                            if (wolves.isEmpty()) {
                                 context.getSource().sendFailure(
-                                    Component.literal("No sheep found within 10 blocks.")
+                                    Component.literal("No wolves found within 10 blocks.")
                                 );
                                 return 0;
                             }
 
-                            Sheep target = sheep.getFirst();
+                            Wolf target = wolves.getFirst();
+
+                            
                             NeedType type = getNeedType(
                                 StringArgumentType.getString(context, "type")
                             );
@@ -47,7 +50,7 @@ public class NeedCommand {
 
                             context.getSource().sendSuccess(
                                 () -> Component.literal(
-                                    "Sheep " + type.id() + ": " + value
+                                    "Wolf " + type.id() + ": " + value
                                 ),
                                 false
                             );
@@ -60,19 +63,20 @@ public class NeedCommand {
                             .executes(context -> {
                                 var player = context.getSource().getPlayerOrException();
 
-                                var sheep = player.level().getEntitiesOfClass(
-                                    Sheep.class,
+                                var wolves = player.level().getEntitiesOfClass(
+                                    Wolf.class,
                                     player.getBoundingBox().inflate(10)
                                 );
 
-                                if (sheep.isEmpty()) {
+                                if (wolves.isEmpty()) {
                                     context.getSource().sendFailure(
-                                        Component.literal("No sheep found within 10 blocks.")
+                                        Component.literal("No wolves found within 10 blocks.")
                                     );
                                     return 0;
                                 }
 
-                                Sheep target = sheep.getFirst();
+                                Wolf target = wolves.getFirst();
+
                                 NeedType type = getNeedType(
                                     StringArgumentType.getString(context, "type")
                                 );
@@ -83,7 +87,7 @@ public class NeedCommand {
 
                                 context.getSource().sendSuccess(
                                     () -> Component.literal(
-                                        "Set sheep " + type.id() + " to " + value
+                                        "Set wolf " + type.id() + " to " + value
                                     ),
                                     false
                                 );
