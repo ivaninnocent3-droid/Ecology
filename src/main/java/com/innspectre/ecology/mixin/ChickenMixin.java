@@ -2,7 +2,6 @@ package com.innspectre.ecology.mixin;
 
 import com.innspectre.ecology.temperament.TemperamentGoals;
 import com.innspectre.ecology.AnimalEcologyGoals;
-import com.innspectre.ecology.mixin.MobAccessor;
 import com.innspectre.ecology.food.SeekFoodGoal;
 
 import net.minecraft.world.entity.ai.goal.GoalSelector;

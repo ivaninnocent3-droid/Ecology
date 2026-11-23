@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.Blocks;
 
 import com.innspectre.ecology.need.NeedManager;
 import com.innspectre.ecology.need.NeedType;
-import com.innspectre.ecology.herd.*;
 import com.innspectre.ecology.animation.AnimalActionManager;
 
 import java.util.EnumSet;

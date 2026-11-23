@@ -8,6 +8,7 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 
 public final class VegetationFinder {
 
@@ -43,7 +44,12 @@ public final class VegetationFinder {
 
                     BlockPos foodPos = centre.offset(x, y, z);
 
-                    if (!animal.level().hasChunkAt(foodPos)) {
+                    if (animal.level().getChunk(
+                            foodPos.getX() >> 4,
+                            foodPos.getZ() >> 4,
+                            ChunkStatus.FULL,
+                            false
+                    ) == null) {
                         continue;
                     }
 

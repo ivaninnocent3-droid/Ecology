@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.world.entity.Entity;
 
 import com.innspectre.ecology.Ecology;
-import com.innspectre.ecology.need.*;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 
 public class NeedManager {

@@ -1,26 +1,17 @@
 
 package com.innspectre.ecology.attraction;
 
-import java.util.EnumSet;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-import com.innspectre.ecology.Ecology;
-import com.innspectre.ecology.attraction.AttractionManager.Signal;
-import com.innspectre.ecology.attraction.AttractionManager.Type;
 import com.innspectre.ecology.recognition.RecognitionManager;
 import com.innspectre.ecology.recognition.RecognitionState;
 import com.innspectre.ecology.herd.*;
 
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerLevel;
 

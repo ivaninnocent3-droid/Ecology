@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 
 import com.innspectre.ecology.herd.Herd;
 import com.innspectre.ecology.herd.HerdManager;
@@ -105,7 +106,12 @@ public final class HerdWaterMemory {
         BlockPos source = memory.waterSource();
 
         // If the chunk is unloaded, retain the memory but don't use it yet.
-        if (!level.hasChunkAt(source)) {
+        if (level.getChunk(
+                source.getX() >> 4,
+                source.getZ() >> 4,
+                ChunkStatus.FULL,
+                false
+        ) == null) {
             return Optional.empty();
         }
 

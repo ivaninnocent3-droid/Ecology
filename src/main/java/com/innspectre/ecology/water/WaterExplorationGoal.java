@@ -13,6 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 
@@ -153,7 +154,12 @@ public class WaterExplorationGoal extends Goal {
             double x = origin.x + dx * LEG_LENGTH;
             double z = origin.z + dz * LEG_LENGTH;
             BlockPos legPos = BlockPos.containing(x, origin.y, z);
-            if (!level.hasChunkAt(legPos)) {
+            if (level.getChunk(
+                    legPos.getX() >> 4,
+                    legPos.getZ() >> 4,
+                    ChunkStatus.FULL,
+                    false
+            ) == null) {
                 continue; // never walk into unloaded chunks
             }
 

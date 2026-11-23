@@ -3,7 +3,6 @@ package com.innspectre.ecology.mixin;
 import com.innspectre.ecology.temperament.TemperamentGoals;
 
 import net.minecraft.world.entity.ai.goal.GoalSelector;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.cow.AbstractCow;
 
 import com.innspectre.ecology.food.FoodSourceType;

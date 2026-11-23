@@ -3,7 +3,6 @@ package com.innspectre.ecology.water;
 import net.minecraft.core.BlockPos;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class WaterCooldowns {
