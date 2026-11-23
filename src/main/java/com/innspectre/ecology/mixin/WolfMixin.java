@@ -15,9 +15,6 @@ import com.innspectre.ecology.predation.WolfHuntTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 
-import com.innspectre.ecology.mixin.NearestAttackableTargetGoalAccessor;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-
 
 @Mixin(Wolf.class)
 public abstract class WolfMixin {

@@ -7,7 +7,6 @@ import net.minecraft.world.entity.Mob;
 
 import java.util.UUID;
 
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 
 

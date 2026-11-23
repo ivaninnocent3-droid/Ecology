@@ -12,7 +12,6 @@ import java.util.WeakHashMap;
 import java.util.Optional;
 
 import com.innspectre.ecology.intelligence.AnimalIntelligence;
-import com.innspectre.ecology.temperament.AnimalResponse;
 import com.innspectre.ecology.temperament.AnimalTemperament;
 import com.innspectre.ecology.temperament.AnimalThreatRules;
 import com.innspectre.ecology.temperament.Threat;

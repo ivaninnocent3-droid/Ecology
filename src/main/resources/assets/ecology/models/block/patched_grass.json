@@ -1,3 +1,36 @@
 {
-  "parent": "minecraft:block/grass_block"
+  "parent": "block/block",
+  "textures": {
+    "particle": "minecraft:block/dirt",
+    "bottom": "minecraft:block/dirt",
+    "dirt": "minecraft:block/dirt",
+    "top_grass": "ecology:block/patched_grass_top_overlay",
+    "top_base": "minecraft:block/grass_block_top",
+    "side_overlay": "minecraft:block/grass_block_side_overlay"
+  },
+  "elements": [
+    {
+      "from": [-0.01, -0.01, -0.01],
+      "to": [16.01, 16.01, 16.01],
+      "faces": {
+        "up":    { "uv": [0, 0, 16, 16], "texture": "#top_grass", "cullface": "up" },
+        "north": { "uv": [0, 0, 16, 16], "texture": "#side_overlay", "tintindex": 0, "cullface": "north" },
+        "south": { "uv": [0, 0, 16, 16], "texture": "#side_overlay", "tintindex": 0, "cullface": "south" },
+        "west":  { "uv": [0, 0, 16, 16], "texture": "#side_overlay", "tintindex": 0, "cullface": "west" },
+        "east":  { "uv": [0, 0, 16, 16], "texture": "#side_overlay", "tintindex": 0, "cullface": "east" }
+      }
+    },
+    {
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "down":  { "texture": "#bottom", "cullface": "down" },
+        "up":    { "texture": "#top_base", "tintindex": 0, "cullface": "up" },
+        "north": { "texture": "#dirt", "cullface": "north" },
+        "south": { "texture": "#dirt", "cullface": "south" },
+        "west":  { "texture": "#dirt", "cullface": "west" },
+        "east":  { "texture": "#dirt", "cullface": "east" }
+      }
+    }
+  ]
 }

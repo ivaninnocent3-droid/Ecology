@@ -11,6 +11,8 @@ import com.innspectre.ecology.animation.AnimalActionManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 
 
 public class SeekFoodGoal extends Goal {

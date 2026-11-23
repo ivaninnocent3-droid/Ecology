@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 
@@ -62,6 +63,12 @@ public final class VegetationFinder {
                     if (food == null) {
                         continue;
                     }
+                    if (animal instanceof Chicken
+                            && food.eatenResult() == null
+                            && (animal.level().getBlockState(foodPos.above()).is(net.minecraft.world.level.block.Blocks.TALL_GRASS)
+                                || animal.level().getBlockState(foodPos.above()).is(net.minecraft.world.level.block.Blocks.SHORT_GRASS))) {
+                        continue;
+                    }
 
                     // Solid food blocks require the animal to stand above them.
                     BlockPos approachPos = state.isCollisionShapeFullBlock(
@@ -87,6 +94,7 @@ public final class VegetationFinder {
                     return distance - nutrition * nutrition * 4.0;
                 })
         );
+
 
         int pathfindingAttempts = 0;
 

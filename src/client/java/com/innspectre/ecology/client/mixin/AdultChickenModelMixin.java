@@ -38,15 +38,12 @@ public abstract class AdultChickenModelMixin {
 
         if (action.ecology$getAction() == AnimalActionEvents.EATING) {
             head.xRot += progress * (
-                    0.06F
-                    + Mth.sin(state.ageInTicks * 0.85F) * 0.09F
+                    0.20F
+                    + Math.max(0.0F, Mth.sin(state.ageInTicks * 0.85F)) * 0.85F
             );
         } else if (action.ecology$getAction()
                 == AnimalActionEvents.DRINKING) {
-            head.xRot += progress * (
-                    0.20F
-                    + Mth.sin(state.ageInTicks * 0.20F) * 0.02F
-            );
+            head.xRot += progress * 0.9F;
         }
     }
 }

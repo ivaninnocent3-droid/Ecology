@@ -1,3 +1,4 @@
+
 package com.innspectre.ecology.food;
 
 import net.minecraft.world.level.block.Block;
@@ -8,4 +9,7 @@ public record VegetationFood(
     FoodNutrition nutrition,
     BlockState eatenResult
 ) {
+    public boolean changesBlock() {
+        return eatenResult != null;
+    }
 }

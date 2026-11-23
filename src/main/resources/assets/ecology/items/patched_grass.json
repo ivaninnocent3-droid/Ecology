@@ -1,6 +1,14 @@
+
 {
   "model": {
     "type": "minecraft:model",
-    "model": "ecology:block/patched_grass"
+    "model": "ecology:block/patched_grass",
+    "tints": [
+      {
+        "type": "minecraft:grass",
+        "temperature": 0.5,
+        "downfall": 1.0
+      }
+    ]
   }
 }

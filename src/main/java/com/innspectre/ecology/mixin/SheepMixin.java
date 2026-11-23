@@ -1,6 +1,5 @@
 package com.innspectre.ecology.mixin;
 
-import com.innspectre.ecology.AnimalEcologyGoals;
 import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.temperament.TemperamentGoals;
 import com.innspectre.ecology.water.*;
