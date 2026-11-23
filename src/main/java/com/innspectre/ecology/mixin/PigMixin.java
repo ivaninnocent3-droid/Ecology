@@ -1,7 +1,9 @@
 package com.innspectre.ecology.mixin;
 
 import com.innspectre.ecology.temperament.TemperamentGoals;
+import com.innspectre.ecology.food.ForageExplorationGoal;
 import com.innspectre.ecology.food.SeekFoodGoal;
+import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.shelter.SeekShelterGoal;
 
 import net.minecraft.world.entity.ai.goal.GoalSelector;
@@ -33,5 +35,7 @@ public abstract class PigMixin {
                     // No additional effect after eating.
                 }
         ));
+        goals.addGoal(6, new HerdCohesionGoal(pig, 1.0));
+        goals.addGoal(5, new ForageExplorationGoal(pig, 1.0));
     }
 }

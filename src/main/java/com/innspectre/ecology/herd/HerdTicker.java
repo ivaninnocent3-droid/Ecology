@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
+import com.innspectre.ecology.food.ForageExplorationManager;
 import com.innspectre.ecology.need.NeedManager;
 import com.innspectre.ecology.need.NeedType;
 
@@ -131,6 +132,11 @@ public final class HerdTicker {
                 leaveHerd(mob, herd, profile, tick);
             }
 
+            return;
+        }
+        // Animals exploring for better feeding grounds should not
+        // randomly leave their herd simply because they are far away.
+        if (ForageExplorationManager.isExploring(mob)) {
             return;
         }
 

@@ -30,8 +30,10 @@ public final class GrazingManager {
             return false;
         }
 
-        // Only change the world if this food has an eaten result.
+
+        // Transform the vegetation only if eating it changes the block.
         if (target.food().changesBlock()) {
+
             boolean changed = animal.level().setBlock(
                     foodPos,
                     target.food().eatenResult(),
@@ -41,14 +43,9 @@ public final class GrazingManager {
             if (!changed) {
                 return false;
             }
-            // Play the block's breaking sound and particles.
-            animal.level().levelEvent(
-                2001,
-                foodPos,
-                Block.getId(currentState)
-            );
         }
 
+        // Restore hunger even when the animal pecks without changing the block.
         NeedManager.change(
                 animal,
                 NeedType.HUNGER,
@@ -56,5 +53,6 @@ public final class GrazingManager {
         );
 
         return true;
+
     }
 }

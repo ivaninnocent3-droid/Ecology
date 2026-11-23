@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.predation.WolfHuntTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
@@ -36,5 +37,6 @@ public abstract class WolfMixin {
 
         // Add hunger-driven hunting.
         targetGoals.addGoal(5, new WolfHuntTargetGoal(wolf));
+        goals.addGoal(6, new HerdCohesionGoal(wolf, 1.0));
     }
 }

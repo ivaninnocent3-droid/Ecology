@@ -4,6 +4,7 @@ import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.shelter.SeekShelterGoal;
 import com.innspectre.ecology.temperament.TemperamentGoals;
 import com.innspectre.ecology.water.*;
+import com.innspectre.ecology.food.ForageExplorationGoal;
 import com.innspectre.ecology.food.SeekFoodGoal;
 
 import net.minecraft.world.entity.ai.goal.EatBlockGoal;
@@ -34,11 +35,11 @@ public abstract class SheepMixin {
                 mob -> mob.level().broadcastEntityEvent(mob, (byte) 10),
                 mob -> sheep.ate()
         ));
-
+        goals.addGoal(5, new ForageExplorationGoal(sheep, 1.0));
         TemperamentGoals.addRunningAvoidanceGoal(sheep, goals);
         goals.addGoal(2, new SeekWaterGoal(sheep));
         goals.addGoal(3, new WaterExplorationGoal(sheep, 1.0));
         goals.addGoal(4, new SeekShelterGoal(sheep, 1.0));
-        goals.addGoal(5, new HerdCohesionGoal(sheep, 1.0));
+        goals.addGoal(6, new HerdCohesionGoal(sheep, 1.0));
     }
 }

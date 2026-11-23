@@ -6,8 +6,10 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.animal.cow.AbstractCow;
 
 import com.innspectre.ecology.food.FoodSourceType;
+import com.innspectre.ecology.food.ForageExplorationGoal;
 import com.innspectre.ecology.food.FoodProfiles;
 import com.innspectre.ecology.food.SeekFoodGoal;
+import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.shelter.SeekShelterGoal;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,5 +43,7 @@ public abstract class CowMixin {
                     }
             ));
         }
+        goals.addGoal(6, new HerdCohesionGoal(cow, 1.0));
+        goals.addGoal(5, new ForageExplorationGoal(cow, 1.0));
     }
 }

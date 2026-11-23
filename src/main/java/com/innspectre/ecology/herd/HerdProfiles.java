@@ -52,7 +52,16 @@ public final class HerdProfiles {
                     8.0, 0.25,
                     40.0, 0.01,
                     600
+            ),
+            EntityTypes.HORSE, new HerdProfile(
+                    50,
+                    24.0, 0.50,
+                    12.0, 0.50,
+                    8.0, 0.25,
+                    40.0, 0.01,
+                    600
             )
+            
     );
     private HerdProfiles() {
     }
