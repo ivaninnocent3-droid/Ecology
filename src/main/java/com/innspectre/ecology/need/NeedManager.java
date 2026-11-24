@@ -30,6 +30,10 @@ public class NeedManager {
 
     public static void initialize() {
     }
+    public static boolean hasTrackedNeeds(Entity entity) {
+        return entity.hasAttached(ATTACHMENTS.get(NeedType.HUNGER))
+                && entity.hasAttached(ATTACHMENTS.get(NeedType.THIRST));
+    }
 
     public static void ensureStarted(Entity entity, NeedType type) {
         if (isExempt(entity)) {

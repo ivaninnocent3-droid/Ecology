@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.innspectre.ecology.block.ModBlocks;
+import com.innspectre.ecology.breeding.NaturalBreedingManager;
 import com.innspectre.ecology.command.*;
 import com.innspectre.ecology.need.*;
 import com.innspectre.ecology.shelter.ShelterManager;
@@ -44,6 +45,7 @@ public class Ecology implements ModInitializer {
 		ShelterManager.register();
 		IndividualThreatTicker.register();
 		AnimalSpawning.register();
+		NaturalBreedingManager.register();
 		LOGGER.info("Hello Fabric world!");
 	}
 

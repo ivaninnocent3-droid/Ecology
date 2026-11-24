@@ -1,3 +1,4 @@
+
 package com.innspectre.ecology.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.animal.Animal;
 
 import com.innspectre.ecology.recognition.RecognitionManager;
 import com.innspectre.ecology.recognition.RecognitionInteraction;
+import com.innspectre.ecology.breeding.NaturalBreedingManager;
 
 @Mixin(Animal.class)
 public abstract class AnimalBreedingMixin {
@@ -41,5 +43,20 @@ public abstract class AnimalBreedingMixin {
                     RecognitionInteraction.BREEDING
             );
         }
+    }
+
+    @Inject(method = "spawnChildFromBreeding", at = @At("TAIL"))
+    private void ecology$recordNaturalBreeding(
+            ServerLevel level,
+            Animal partner,
+            CallbackInfo ci
+    ) {
+        Animal animal = (Animal) (Object) this;
+
+        NaturalBreedingManager.onSuccessfulBreeding(
+                animal,
+                partner,
+                level.getGameTime()
+        );
     }
 }

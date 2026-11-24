@@ -3,7 +3,7 @@ package com.innspectre.ecology.need;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.entity.animal.Animal;
 
 public final class SurvivalEvents {
 
@@ -23,18 +23,20 @@ public final class SurvivalEvents {
         }
 
         for (var entity : level.getAllEntities()) {
-            if (!(entity instanceof Sheep sheep) || !sheep.isAlive()) {
+            if (!(entity instanceof Animal animal)
+                    || !animal.isAlive()
+                    || !NeedManager.hasTrackedNeeds(animal)) {
                 continue;
             }
 
             boolean starving =
-                    NeedManager.get(sheep, NeedType.HUNGER) <= 0;
+                    NeedManager.get(animal, NeedType.HUNGER) <= 0;
 
             boolean dehydrated =
-                    NeedManager.get(sheep, NeedType.THIRST) <= 0;
+                    NeedManager.get(animal, NeedType.THIRST) <= 0;
 
             if (starving || dehydrated) {
-                sheep.hurtServer(
+                animal.hurtServer(
                         level,
                         level.damageSources().starve(),
                         DAMAGE_AMOUNT
