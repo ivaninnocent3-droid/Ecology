@@ -4,6 +4,7 @@ import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.shelter.SeekShelterGoal;
 import com.innspectre.ecology.temperament.TemperamentGoals;
 import com.innspectre.ecology.water.*;
+import com.innspectre.ecology.AnimalEcologyGoals;
 import com.innspectre.ecology.food.ForageExplorationGoal;
 import com.innspectre.ecology.food.SeekFoodGoal;
 
@@ -23,6 +24,7 @@ public abstract class SheepMixin {
     private void ecology$addEcologyGoals(CallbackInfo ci) {
         Sheep sheep = (Sheep) (Object) this;
         GoalSelector goals = ((MobAccessor) sheep).ecology$getGoalSelector();
+        AnimalEcologyGoals.addAttractionGoal(sheep, goals);
 
         // Replace vanilla eating with our ecology-based food system.
         EatBlockGoal vanillaEating =

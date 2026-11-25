@@ -11,6 +11,7 @@ import com.innspectre.ecology.food.FoodProfiles;
 import com.innspectre.ecology.food.SeekFoodGoal;
 import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.shelter.SeekShelterGoal;
+import com.innspectre.ecology.AnimalEcologyGoals;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,6 +25,7 @@ public abstract class CowMixin {
     private void ecology$addRunningAvoidanceGoal(CallbackInfo ci) {
         AbstractCow cow = (AbstractCow) (Object) this;
         GoalSelector goals = ((MobAccessor) cow).ecology$getGoalSelector();
+        AnimalEcologyGoals.addSharedGoals(cow, goals);
 
         TemperamentGoals.addRunningAvoidanceGoal(cow, goals);
         goals.addGoal(4, new SeekShelterGoal(cow, 1.0));

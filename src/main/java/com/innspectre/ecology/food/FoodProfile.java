@@ -51,6 +51,12 @@ public record FoodProfile(
             )
         );
     }
+    public static FoodProfile horse() {
+        return new FoodProfile(
+            DietType.HERBIVORE,
+            List.of(FoodSourceType.VEGETATION)
+        );
+    }
 
     public boolean accepts(FoodSourceType source) {
         return foodSources.contains(source);

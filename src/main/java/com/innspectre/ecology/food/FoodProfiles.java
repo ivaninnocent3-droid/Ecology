@@ -1,8 +1,8 @@
 
 package com.innspectre.ecology.food;
 
-import java.util.Optional;
 import java.util.Map;
+import java.util.Optional;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
@@ -14,7 +14,8 @@ public final class FoodProfiles {
         EntityTypes.COW, FoodProfile.cow(),
         EntityTypes.CHICKEN, FoodProfile.chicken(),
         EntityTypes.PIG, FoodProfile.pig(),
-        EntityTypes.WOLF, FoodProfile.wolf()
+        EntityTypes.WOLF, FoodProfile.wolf(),
+        EntityTypes.HORSE, FoodProfile.horse()
     );
 
     private FoodProfiles() {

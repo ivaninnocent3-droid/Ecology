@@ -13,6 +13,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import com.innspectre.ecology.recognition.RecognitionManager;
+import com.innspectre.ecology.AnimalEcologyGoals;
+import com.innspectre.ecology.food.FoodProfiles;
+import com.innspectre.ecology.food.ForageExplorationGoal;
+import com.innspectre.ecology.food.SeekFoodGoal;
 import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.recognition.RecognitionInteraction;
 
@@ -54,11 +58,34 @@ public abstract class AbstractHorseMixin {
         }
     }
 
+
     @Inject(method = "registerGoals", at = @At("TAIL"))
     private void ecology$addHerdGoals(CallbackInfo ci) {
         AbstractHorse horse = (AbstractHorse) (Object) this;
-        GoalSelector goals = ((MobAccessor) horse).ecology$getGoalSelector();
+
+        GoalSelector goals =
+                ((MobAccessor) horse).ecology$getGoalSelector();
+
+        // Only horses with a registered Ecology food profile
+        // participate in the new food and water behaviours.
+        if (FoodProfiles.get(horse.getType()).isPresent()) {
+
+            AnimalEcologyGoals.addSharedGoals(horse, goals);
+
+            goals.addGoal(5, new SeekFoodGoal(
+                    horse,
+                    mob -> {
+                        // No horse-specific eating animation yet.
+                    },
+                    mob -> {
+                        // No additional effect after grazing.
+                    }
+            ));
+
+            goals.addGoal(5, new ForageExplorationGoal(horse, 1.0));
+        }
 
         goals.addGoal(6, new HerdCohesionGoal(horse, 1.0));
     }
+
 }

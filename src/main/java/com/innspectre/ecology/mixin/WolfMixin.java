@@ -15,6 +15,7 @@ import com.innspectre.ecology.herd.HerdCohesionGoal;
 import com.innspectre.ecology.predation.WolfHuntTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
+import com.innspectre.ecology.AnimalEcologyGoals;
 
 
 @Mixin(Wolf.class)
@@ -25,6 +26,7 @@ public abstract class WolfMixin {
         Wolf wolf = (Wolf) (Object) this;
 
         GoalSelector goals = ((MobAccessor) wolf).ecology$getGoalSelector();
+        AnimalEcologyGoals.addSharedGoals(wolf, goals);
         GoalSelector targetGoals = ((MobAccessor) wolf).ecology$getTargetSelector();
 
         TemperamentGoals.addRunningAvoidanceGoal(wolf, goals);
