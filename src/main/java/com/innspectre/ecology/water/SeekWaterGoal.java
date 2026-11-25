@@ -317,7 +317,7 @@ public class SeekWaterGoal extends Goal {
     private void stopDrinking() {
         if (seekingState.isDrinking()) {
             AnimalActionManager.stopDrinking(animal);
-            stopDrinking();
+            seekingState.stopDrinking();
         }
     }
 }
